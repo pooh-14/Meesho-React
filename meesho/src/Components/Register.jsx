@@ -43,7 +43,7 @@ const Register = () => {
   };
 
   function selectRole(event) {
-    console.log(event.target.value, "- role");
+    // console.log(event.target.value, "- role");
     setUserData({ ...userData, ["role"]: event.target.value });
   }
   return (
