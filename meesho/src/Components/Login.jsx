@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
 
-  const { state, Login } = useContext(AuthContext);
+  const {  Login } = useContext(AuthContext);
   const [userData, setUserData] = useState({
     email: "",
     password: "",
