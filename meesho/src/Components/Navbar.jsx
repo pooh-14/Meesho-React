@@ -7,7 +7,7 @@ import { toast } from "react-hot-toast";
 import "../Components/CSS Files/AddProducts.css";
 
 const Navbar = () => {
-  const { state, Login, Logout } = useContext(AuthContext);
+  const { state, dispatch } = useContext(AuthContext);
   const [userData, setUserData] = useState({
     email: "",
     password: "",
@@ -38,6 +38,12 @@ const Navbar = () => {
 
   function up() {
     setDropdown(false);
+  }
+
+  function Logoutt(){
+    dispatch({
+      type: "LOGOUT"
+  });
   }
 
   // ---------------------------****------------------------------
@@ -152,7 +158,7 @@ const Navbar = () => {
         currentUser.name = userData?.name;
       }
     }
-    Login(currentUser);
+    // Login(currentUser);
     localStorage.setItem("Current-user", JSON.stringify(currentUser));
     localStorage.setItem("Users", JSON.stringify(allUsers));
     setUserData({});
@@ -174,7 +180,7 @@ const Navbar = () => {
                 </div>
                 <div>
                   <p>
-                    <b>Hello {userData.name} </b>
+                    <b>Hello  {state?.user?.name}</b>
                   </p>
                   <p>+9199******43</p>
                 </div>
@@ -189,7 +195,7 @@ const Navbar = () => {
                 </div>
                 <div>
                   <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                  <p onClick={Logout}>Logout</p>
+                  <p onClick={Logoutt}>Logout</p>
                 </div>
               </div>
             </div>

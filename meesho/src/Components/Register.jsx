@@ -1,51 +1,53 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import '../Components/CSS Files/Login.css'
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { AuthContext } from "../Context/AuthContext";
 
 const Register = () => {
 
 
-  const [userData, setUserData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    role: "Buyer",
-  });
+  const [userData, setUserData] = useState({ name: "", email: "", password: "", confirmPassword: "", role: "Buyer" })
 
-  const router = useNavigate();
+  const { state } = useContext(AuthContext)
+  const router = useNavigate()
 
-  console.log(userData, "userData");
   const handleChange = (event) => {
-    setUserData({ ...userData, [event.target.name]: event.target.value });
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    if (userData.name && userData.email && userData.password) {
-      const usersArray = JSON.parse(localStorage.getItem("Users")) || [];
-      const userDataObj = {
-        name: userData.name,
-        email: userData.email,
-        password: userData.password,
-        role: userData.role,
-        cart: [],
-      };
-      usersArray.push(userDataObj);
-      localStorage.setItem("Users", JSON.stringify(usersArray));
-      setUserData({ name: "", email: "", password: "", role: "Buyer" });
-      router("/login");
-      toast.success("Registration Successfull.");
-    } else {
-      toast.error("Please fill the all fields.");
-    }
-  };
-
-  function selectRole(event) {
-    // console.log(event.target.value, "- role");
-    setUserData({ ...userData, ["role"]: event.target.value });
+      setUserData({ ...userData, [event.target.name]: event.target.value })
   }
+  const selectRole = (event) => {
+      setUserData({ ...userData, "role": event.target.value })
+  }
+
+  const handleSubmit = async (event) => {
+      event.preventDefault();
+      if (userData.name && userData.email && userData.password && userData.confirmPassword && userData.role) {
+          if (userData.password === userData.confirmPassword) {
+              const response = await axios.post("http://localhost:8000/register", { userData });
+              if (response.data.success) {
+                  setUserData({ name: "", email: "", password: "", confirmPassword: "", role: "Buyer" })
+                  router('/login')
+                  toast.success(response.data.message)
+              } else {
+                  toast.error(response.data.message)
+              }
+
+          } else {
+              toast.error("Password and Confirm Password not Matched.")
+          }
+      } else {
+          toast.error("All fields are mandtory.")
+      }
+  }
+  // console.log(userData, "userData")
+
+  useEffect(() => {
+      if (state?.user?.name) {
+          router('/')
+      }
+  }, [state])
+
   return (
     <div id="logscreen">
       <div id="logbody">
@@ -89,6 +91,15 @@ const Register = () => {
               type="password"
               name="password"
               value={userData.password}
+              onChange={handleChange}
+            />
+            <br />
+            <label>Confirm Password :</label>
+            <br />
+            <input
+              type="password"
+              name="confirmPassword"
+              value={userData.confirmPassword}
               onChange={handleChange}
             />
             <br />

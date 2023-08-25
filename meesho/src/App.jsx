@@ -8,9 +8,14 @@ import Login from './Components/Login';
 import AllProducts from './Components/AllProducts';
 import SingleProduct from './Components/SingleProduct';
 import Cart from './Components/Cart';
+import { AuthContext } from './Context/AuthContext';
+import { useContext } from 'react';
 
 function App() {
+  const { state } = useContext(AuthContext);
+  // console.log(state?.user, "- frontenduser")
   return (
+  
     <div>
       <Navbar/>
       <Routes>

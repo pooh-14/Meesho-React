@@ -23,7 +23,7 @@ const HandleAuthContext = ({ children }) => {
     useEffect(() => {
         async function getCurrentUserData() {
             var token = JSON.parse(localStorage.getItem("token"));
-            const response = await axios.post("http://localhost:8002/get-current-user", { token });
+            const response = await axios.post ("http://localhost:8000/get-current-user", { token });
             if (response.data.success) {
                 dispatch({
                     type: "LOGIN",
