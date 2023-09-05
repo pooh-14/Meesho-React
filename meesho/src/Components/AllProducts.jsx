@@ -1,28 +1,23 @@
 import React, { useEffect, useState } from "react";
 import "../Components/CSS Files/AllProducts.css";
 import { useNavigate } from "react-router-dom";
+import api from "./ApiConfig";
 
 const AllProducts = () => {
 
-  const [isProductsExist, setIsProductsExist] = useState(false);
     const [products, setProducts] = useState([]);
     const router = useNavigate()
 
-    useEffect(() => {
-      const productsFromDb = JSON.parse(localStorage.getItem("Products"))
-      if (productsFromDb) {
-          setIsProductsExist(true);
-          setProducts(productsFromDb);
-      } else {
-          setIsProductsExist(false);
-          setProducts([]); // Set an empty array if there are no products in localStorage
+  useEffect(() => {
+    async function getProducts() {
+      const token = JSON.parse(localStorage.getItem("token"));
+      const response = await api.get("/all-products", { token });
+      if (response.data.success) {
+        setProducts(response.data.products);
       }
-  }, []);
-
-    const redirect = (id) => {
-        console.log(id, "-id");
-        router(`/singleproduct/${id}`)
     }
+    getProducts();
+  }, []);
 
   return (
     <div>
@@ -197,7 +192,8 @@ const AllProducts = () => {
        </div>
        <div id="allright">
        {products.map((pro) => (  
-         <div onClick={() => redirect(pro.id)}>
+         <div onClick={() => router(`/singleproduct/${pro._id}`)}
+                key={pro._id}>
            <div>
              <img src={pro.image} />
            </div>

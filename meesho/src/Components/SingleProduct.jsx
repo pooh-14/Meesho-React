@@ -3,17 +3,14 @@ import '../Components/CSS Files/SingleProduct.css'
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { AuthContext } from '../Context/AuthContext';
+import api from "./ApiConfig";
 
 const SingleProduct = () => {
 
- const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
-  const [currentUserEmail, setCurrentUserEmail] = useState("");
-  const [products, setProducts] = useState([]);
   const [single, setSingle] = useState({});
   const { id } = useParams();
   const router = useNavigate();
   const { state } = useContext(AuthContext);
-  const [isProductExist, setIsProductExist] = useState(false);
   const [userData, setUserData] = useState({});
   const [productData, setProductData] = useState({
     name: "",
@@ -23,57 +20,39 @@ const SingleProduct = () => {
   });
   const [allowUpdate, setAllowUpdate] = useState(false);
 
-  useEffect(() => {
-    if (state) {
-      setUserData(state.user);
-    }
-  }, [state]);
 
   useEffect(() => {
-    const productFromDB = JSON.parse(localStorage.getItem("Products"));
-    if (productFromDB) {
-      setIsProductExist(true);
-      setProducts(productFromDB);
-    } else {
-      setIsProductExist(false);
-    }
-  }, []);
+    if (id) {
+        async function getSingleProductData() {
+            try {
+                const response = await api.post('/get-single-product-data', { productId: id })
+                if (response.data.success) {
+                    setSingle(response.data.product)
+                }
+            } catch (error) {
 
-  useEffect(() => {
-    if (isProductExist) {
-      if (id && products.length) {
-        const res = products.find((pro) => pro.id == id);
-        setSingle(res);
-      }
-    }
-  }, [id, products]);
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("Current-user"));
-    // console.log(user, "uzer");
-    if (user) {
-      setIsUserLoggedIn(true);
-      setCurrentUserEmail(user.email);
-    }
-  }, []);
-
-  function addCart() {
-    if (isUserLoggedIn) {
-      const users = JSON.parse(localStorage.getItem("Users"));
-      for (let i = 0; i < users.length; i++) {
-        if (users[i].email === currentUserEmail) {
-          users[i].cart.push(single);
-          localStorage.setItem("Users", JSON.stringify(users));
-          break;
+            }
         }
+        getSingleProductData()
+    }
+}, [id])
+
+  console.log(single, "single");
+
+  async function addCart(productId) {
+    try {
+      const response = await api.post("/add-to-cart", {
+        productId,
+        userId: state?.user?._id,
+      });
+
+      if (response.data.success) {
+        toast.success("Product added successfully to cart!!");
       }
-      toast.success("Product successfully added to cart!");
-      router("/cart");
-    } else {
-      toast.error("You can't add a product before logging in!");
+    } catch (error) {
+      toast.error("Internal server error, please try again...");
     }
   }
-
 
 
 

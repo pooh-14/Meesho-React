@@ -5,13 +5,19 @@ import {
   Login,
   Register,
   getCurrentUser,
+  getNumber,
+  sendOtp,
+  verifyOtp,
 } from "./Controllers/User.controller.js";
 import {
   addComments,
   addProduct,
   addRating,
+  addToCart,
+  allCartProducts,
   allProduct,
   deleteYourProduct,
+  getSingleProductData,
   getYourProducts,
   updateYourProduct,
 } from "./Controllers/Product.controller.js";
@@ -35,11 +41,13 @@ import {
   isValidUser,
 } from "./Middlewares/All.Middleware.js";
 import cors from 'cors';
+import morgan from 'morgan';
 
 const app = express();
 app.use(express.json());
 dotenv.config();
 app.use(cors());
+app.use(morgan("dev"))
 
 app.get("/", (req, res) => {
   res.send("Working!");
@@ -55,11 +63,32 @@ app.post("/add-product", checkSeller, addProduct);
 
 app.get("/all-products", allProduct);
 
-app.get("/get-your-products", checkSeller, getYourProducts);
+app.post("/get-number", getNumber)
+
+app.post("/send-otp", sendOtp)
+
+app.post("/verify-otp", verifyOtp)
+
+
+
+
+
+
+
+
+app.post("/get-your-products", checkSeller, getYourProducts);
 
 app.patch("/update-your-product", checkSeller, updateYourProduct);
 
 app.post("/add-cart", addCart);
+
+
+
+app.post("/get-single-product-data", getSingleProductData);
+
+app.post("/add-to-cart", addToCart);
+
+app.post("/all-cart-products", allCartProducts);
 
 app.get("/get-cart-products", getCartProducts);
 
@@ -91,6 +120,6 @@ mongoose.connect(process.env.MONGO_URL).then(() => {
   console.log("Connected to DB!");
 });
 
-app.listen(8000, () => {
-  console.log("Server running on port 8000!");
+app.listen(8005, () => {
+  console.log("Server running on port 8005!");
 });

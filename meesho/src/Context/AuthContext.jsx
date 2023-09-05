@@ -1,5 +1,7 @@
-import axios from "axios";
+
 import { createContext, useEffect, useReducer } from "react";
+import { toast } from 'react-hot-toast'
+import api from "../Components/ApiConfig";
 
 export const AuthContext = createContext();
 
@@ -10,6 +12,8 @@ const reducer = (state, action) => {
         case 'LOGIN':
             return { ...state, user: action.payload }
         case 'LOGOUT':
+            localStorage.removeItem("token")
+            toast.success("Logout success.")
             return { ...state, user: null }
         default:
             return state
@@ -23,17 +27,26 @@ const HandleAuthContext = ({ children }) => {
     useEffect(() => {
         async function getCurrentUserData() {
             var token = JSON.parse(localStorage.getItem("token"));
-            const response = await axios.post ("http://localhost:8000/get-current-user", { token });
-            if (response.data.success) {
-                dispatch({
-                    type: "LOGIN",
-                    payload: response.data.user
-                })
-            } else {
-                dispatch({
-                    type: "LOGOUT"
-                });
+
+            if (token) {
+                try {
+                    const response = await api.post("/get-current-user", { token });
+                console.log(response.data,"-resspomnse data")
+                if (response.data.success) {
+                    dispatch({
+                        type: "LOGIN",
+                        payload: response.data.user
+                    })
+                } else {
+                    dispatch({
+                        type: "LOGOUT"
+                    });
+                }
+                } catch (error) {
+                    console.log(error);
+                }
             }
+
         }
         getCurrentUserData();
     }, [])

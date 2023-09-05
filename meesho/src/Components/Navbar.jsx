@@ -5,6 +5,7 @@ import { AuthContext } from "../Context/AuthContext";
 import { v4 as uuidv4 } from "uuid";
 import { toast } from "react-hot-toast";
 import "../Components/CSS Files/AddProducts.css";
+import api from "./ApiConfig";
 
 const Navbar = () => {
   const { state, dispatch } = useContext(AuthContext);
@@ -40,58 +41,40 @@ const Navbar = () => {
     setDropdown(false);
   }
 
-  function Logoutt(){
-    dispatch({
-      type: "LOGOUT"
-  });
-  }
-
   // ---------------------------****------------------------------
 
   // --------------------------**ADD PRODUCT**--------------------------
-
-  const handleChange = (event) => {
-    setProductData({ ...productData, [event.target.name]: event.target.value });
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (
-      productData.name &&
-      productData.price &&
-      productData.image &&
-      productData.category
-    ) {
-      const productsArray = JSON.parse(localStorage.getItem("Products")) || [];
-
-      const randomId = uuidv4();
-      productData["id"] = randomId;
-      productsArray.push(productData);
-      localStorage.setItem("Products", JSON.stringify(productsArray));
-      setProductData({ name: "", price: "", image: "", category: "Other" });
-      router("/allproducts");
-      toast.success("Product added Successfully!");
-    } else {
-      toast.error("Please fill all the data!");
-    }
-  };
-
-  function selectRole(event) {
-    setProductData({ ...productData, ["category"]: event.target.value });
-  }
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("Current-user"));
-    if (user) {
-      if (user?.role == "Buyer") {
-        toast.error("Access granted only to Seller.");
-        router("/");
+  
+    const handleChange = (event) => {
+      setProductData({ ...productData, [event.target.name]: event.target.value });
+    };
+  
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+      if (
+        productData.name &&
+        productData.price &&
+        productData.image &&
+        productData.category
+      ) {
+        const token = JSON.parse(localStorage.getItem("token"));
+        try {
+          const response = await api.post("/add-product", {
+            token,
+            productData,
+          });
+          if (response.data.success) {
+            setProductData({ name: "", price: "", image: "", category: "" });
+            router("/yourproduct");
+            toast.success(response.data.message);
+          }
+        } catch (error) {
+          toast.error(error.response.data.message);
+        }
+      } else {
+        toast.error("All fields are mandtory.");
       }
-    } else {
-      toast.error("You are not a Logged in user.");
-      router("/login");
-    }
-  }, []);
+    };
 
   function addOpen() {
     setAddition(true);
@@ -195,7 +178,7 @@ const Navbar = () => {
                 </div>
                 <div>
                   <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                  <p onClick={Logoutt}>Logout</p>
+                  <p onClick={() => dispatch({ type: 'LOGOUT' })}>Logout</p>
                 </div>
               </div>
             </div>
@@ -244,13 +227,12 @@ const Navbar = () => {
                 <br />
                 <label>Product Category :</label>
                 <br />
-                <select onChange={selectRole}>
-                  <option value="Other">Other</option>
-                  <option value="Mens">Mens</option>
-                  <option value="Womens">Womens</option>
-                  <option value="Kids">Kids</option>
-                  <option value="Electronics">Electronics</option>
-                </select>
+                <input
+                  type="text"
+                  name="category"
+                  value={productData.category}
+                  onChange={handleChange}
+                />
                 <br />
                 <label>Product Image :</label>
                 <br />

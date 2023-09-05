@@ -3,6 +3,7 @@ import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import '../Components/CSS Files/Cart.css'
 import { AuthContext } from "../Context/AuthContext";
+import api from "./ApiConfig";
 
 const Cart = () => {
     const { state } = useContext(AuthContext);
@@ -16,76 +17,49 @@ const Cart = () => {
   const router = useNavigate();
 
   // console.log(userCart, "- userCart");
+  console.log(state, "state here");
 
   useEffect(() => {
-    if (state) {
-      setUserData(state.user);
+    async function getCartProduct() {
+      try {
+        const response = await api.post("/all-cart-products", {
+          userId: state?.user?._id,
+        });
+        if (response.data.success) {
+          setUserCart(response.data.userCart);
+        }
+      } catch (error) {
+        console.log(error, "error in cart");
+      }
+    }
+    if (state?.user?._id) {
+      getCartProduct();
     }
   }, [state]);
 
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("Current-user"));
-    if (user?.email) {
-      const allUsers = JSON.parse(localStorage.getItem("Users"));
-      for (var i = 0; i < allUsers.length; i++) {
-        if (
-          allUsers[i].email == user.email &&
-          allUsers[i].password == user.password
-        ) {
-          setUserCart(allUsers[i].cart);
-          break;
-        }
-      }
-    } else {
-     toast.error("Please login to watch all cart products.");
-      router("/login");
-    }
-  }, []);
-
-  useEffect(() => {
-    if (userCart.length) {
-        var totalprice = 0;
-        for (var i = 0; i < userCart.length; i++) {
-            totalprice += parseInt(userCart[i].price);
-        }
-        setFinalPrice(totalprice)
-    }
-}, [userCart])
-
-
-useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("Current-user"))
-    if (user) {
-        if (user?.role == "Seller") {
-            toast.error("Access granted only to Buyer.")
-            router('/')
-        }
-    } else {
-        toast.error("You are not a Logged in user.")
-        router('/login')
-    }
-}, [])
-
+  console.log(userCart, "userCart here");
 
   function checkout(){
-    const user = JSON.parse(localStorage.getItem("Current-user"));
-    if (user?.email) {
-      const allUsers = JSON.parse(localStorage.getItem("Users"));
-      for (var i = 0; i < allUsers.length; i++) {
-        if (
-          allUsers[i].email == user.email &&
-          allUsers[i].password == user.password
-        ) {
-          allUsers[i].cart=[];
+    if (state?.user?._id) {
+      for (var i = 0; i < userCart.length; i++) {
+          userCart[i].cart=[];
           break;
-        }
       }
-      localStorage.setItem("Users",JSON.stringify(allUsers))
     }
     setFinalPrice([]);  
     setUserCart([]);
    toast.success("Your products will be delivered soon. Thankyou for shopping!")
   }
+
+  useEffect(() => {
+    if (userCart?.length) {
+        var totalprice = 0;
+        for (var i = 0; i < userCart.length; i++) {
+            totalprice += userCart[i].price;
+        }
+        setFinalPrice(totalprice)
+    }
+}, [userCart])
   
   return (
     <div id='cascreen'>
