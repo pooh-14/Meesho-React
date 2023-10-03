@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import {
   Login,
   Register,
+  checkOut,
   getCurrentUser,
   getNumber,
   sendOtp,
@@ -92,6 +93,8 @@ app.post("/all-cart-products", allCartProducts);
 
 app.get("/get-cart-products", getCartProducts);
 
+app.post("/checkout", checkOut);
+
 app.delete("/delete-your-product", checkSeller, deleteYourProduct);
 
 app.patch("/block-user", isAdmin, blockUser);
@@ -120,6 +123,6 @@ mongoose.connect(process.env.MONGO_URL).then(() => {
   console.log("Connected to DB!");
 });
 
-app.listen(8005, () => {
-  console.log("Server running on port 8005!");
+app.listen(8000, () => {
+  console.log("Server running on port 8000!");
 });

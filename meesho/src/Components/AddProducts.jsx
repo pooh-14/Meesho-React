@@ -6,47 +6,47 @@ import '../Components/CSS Files/AddProducts.css'
 
 const AddProduct = () => {
 
-    const [productData, setProductData] = useState({ name: "", price: "", image: "", category: "Other" });
+  const [productData, setProductData] = useState({
+    name: "",
+    price: "",
+    image: "",
+    category: "",
+  });
 
-    const router = useNavigate();
+  const { state } = useContext(AuthContext);
+  const router = useNavigate();
 
-    const handleChange = (event) => {
-        setProductData({ ...productData, [event.target.name]: event.target.value })
-    }
+  const handleChange = (event) => {
+    setProductData({ ...productData, [event.target.name]: event.target.value });
+  };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        if (productData.name && productData.price && productData.image && productData.category) {
-            const productsArray = JSON.parse(localStorage.getItem("Products")) || [];
-
-            const randomId = uuidv4();
-            productData["id"] = randomId;
-            productsArray.push(productData);
-            localStorage.setItem("Products", JSON.stringify(productsArray))
-            setProductData({ name: "", price: "", image: "", category: "Other" })
-            router('/allproducts');
-            toast.success("Product added Successfully!")
-        } else {
-            toast.error("Please fill all the data!")
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (
+      productData.name &&
+      productData.price &&
+      productData.image &&
+      productData.category
+    ) {
+      const token = JSON.parse(localStorage.getItem("token"));
+      try {
+        const response = await api.post("/add-product", {
+          token,
+          productData,
+        });
+        if (response.data.success) {
+          setProductData({ name: "", price: "", image: "", category: "" });
+          router("/yourproduct");
+          toast.success(response.data.message);
         }
+      } catch (error) {
+        toast.error(error.response.data.message);
+      }
+    } else {
+      toast.error("All fields are mandtory.");
     }
-
-    function selectRole(event) {
-        setProductData({ ...productData, ["category"]: event.target.value })
-    }
-
-    useEffect(() => {
-        const user = JSON.parse(localStorage.getItem("Current-user"))
-        if (user) {
-            if (user?.role == "Buyer") {
-                toast.error("Access granted only to Seller.")
-                router('/')
-            }
-        } else {
-            toast.error("You are not a Logged in user.")
-            router('/login')
-        }
-    }, [])
+  };
+  // console.log(productData, "productData")
     
   return (
     <div>

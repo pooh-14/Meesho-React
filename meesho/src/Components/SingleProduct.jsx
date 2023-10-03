@@ -7,19 +7,12 @@ import api from "./ApiConfig";
 
 const SingleProduct = () => {
 
-  const [single, setSingle] = useState({});
-  const { id } = useParams();
-  const router = useNavigate();
-  const { state } = useContext(AuthContext);
+  
   const [userData, setUserData] = useState({});
-  const [productData, setProductData] = useState({
-    name: "",
-    price: "",
-    image: "",
-    category: "Other",
-  });
   const [allowUpdate, setAllowUpdate] = useState(false);
-
+  const { id } = useParams();
+  const { state } = useContext(AuthContext);
+  const [singleProductData, setSingleProductData] = useState({});
 
   useEffect(() => {
     if (id) {
@@ -27,30 +20,31 @@ const SingleProduct = () => {
             try {
                 const response = await api.post('/get-single-product-data', { productId: id })
                 if (response.data.success) {
-                    setSingle(response.data.product)
+                    setSingleProductData(response.data.product)
                 }
             } catch (error) {
-
+              console.log(error);
             }
         }
         getSingleProductData()
     }
 }, [id])
 
-  console.log(single, "single");
+  console.log(singleProductData, "singleProductData");
 
-  async function addCart(productId) {
+  async function addToCart(productId) {
     try {
-      const response = await api.post("/add-to-cart", {
-        productId,
-        userId: state?.user?._id,
-      });
-
+      const token = JSON.parse(localStorage.getItem("token"));
+      const response = await api.post("/add-cart", { productId},{token});
+  
       if (response.data.success) {
         toast.success("Product added successfully to cart!!");
+      } else {
+        toast.error("Failed to add product to cart. Please try again.");
       }
     } catch (error) {
-      toast.error("Internal server error, please try again...");
+      console.log(error);
+      toast.error("Internal server error")
     }
   }
 
@@ -68,31 +62,33 @@ const SingleProduct = () => {
   }
 
   function handleChange(e) {
-    setProductData({ ...productData, [e.target.name]: e.target.value });
+    setSingleProductData({ ...singleProductData, [e.target.name]: e.target.value });
   }
   function selectRole(e) {
-    setProductData({ ...productData, ["category"]: e.target.value });
+    setSingleProductData({ ...singleProductData, ["category"]: e.target.value });
   }
   function handleSubmit(e) {
     e.preventDefault();
     const allProduct = JSON.parse(localStorage.getItem("Products"));
     for (let i = 0; i < allProduct.length; i++) {
       if (allProduct[i].id === id) {
-        allProduct[i].image = productData.image;
-        allProduct[i].name = productData.name;
-        allProduct[i].price = productData.price;
-        allProduct[i].category = productData.category;
-        single.image = productData.image;
-        single.name = productData.name;
-        single.price = productData.price;
-        single.category = productData.category;
+        allProduct[i].image = singleProductData.image;
+        allProduct[i].name = singleProductData.name;
+        allProduct[i].price = singleProductData.price;
+        allProduct[i].category = singleProductData.category;
+        singleProductData.image = singleProductData.image;
+        singleProductData.name = singleProductData.name;
+        singleProductData.price = singleProductData.price;
+        singleProductData.category = singleProductData.category;
 
         localStorage.setItem("Products", JSON.stringify(allProduct));
-        setProductData({ name: "", price: "", image: "", category: "Other" });
+        setSingleProductData({ name: "", price: "", image: "", category: "Other" });
         toast.success("Product Updated!");
       }
     }
   }
+
+
   return (
     <div>
         <div id="sgscreen">
@@ -107,7 +103,7 @@ const SingleProduct = () => {
                 <input
                   type="text"
                   name="name"
-                  value={productData.name}
+                  value={singleProductData.name}
                   onChange={handleChange}
                 />
                 <br />
@@ -117,7 +113,7 @@ const SingleProduct = () => {
                 <input
                   type="number"
                   name="price"
-                  value={productData.price}
+                  value={singleProductData.price}
                   onChange={handleChange}
                 />
                 <br />
@@ -138,7 +134,7 @@ const SingleProduct = () => {
                 <input
                   type="text"
                   name="image"
-                  value={productData.image}
+                  value={singleProductData.image}
                   onChange={handleChange}
                 />
                 <br />
@@ -151,31 +147,31 @@ const SingleProduct = () => {
  <div id="sgbody">
    <div id="sgleft">
      <img
-       src={single.image}
+       src={singleProductData.image}
      />
      <img
-       src={single.image}
+       src={singleProductData.image}
      />
      <img
-       src={single.image}
+       src={singleProductData.image}
      />
    </div>
    <div id="sgbet">
      <div>
        <img
-         src={single.image}
+         src={singleProductData.image}
        />
-     </div>
+     </div>  
 
-     {userData?.role === "Seller" ?
+     {userData?.role !== "Buyer" ?
      <div>
        <button onClick={uptoDate}>Update Product</button>
        <button>Delete</button>
      </div>
         :
      <div>
-       <button onClick={addCart}>Add to Cart</button>
-       <button>Buy Now</button>
+       <button onClick={addToCart}>Add to Cart</button>
+      <button>Buy Now</button>
      </div>}
 
 
@@ -194,8 +190,8 @@ const SingleProduct = () => {
    </div>
    <div id="sgright">
      <div>
-       <p>{single.name}</p>
-       <p>₹{single.price}</p>
+       <p>{singleProductData.name}</p>
+       <p>₹{singleProductData.price}</p>
        <div>
          <span>
            <p>4.0</p>
@@ -216,7 +212,7 @@ const SingleProduct = () => {
      </div>
      <div>
        <h4>Product Details</h4>
-       <p>Name : {single.name}</p>
+       <p>Name : {singleProductData.name}</p>
        <p>Fabric : Cotton</p>
        <p>Sleeve Length : NA</p>
        <p>Pattern : Solid</p>

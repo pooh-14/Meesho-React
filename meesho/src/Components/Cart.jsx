@@ -6,17 +6,10 @@ import { AuthContext } from "../Context/AuthContext";
 import api from "./ApiConfig";
 
 const Cart = () => {
-    const { state } = useContext(AuthContext);
   const [finalprice, setFinalPrice] = useState(0);
-  const [userCart, setUserCart] = useState([]);
-  const [userData, setUserData] = useState({
-    email: "",
-    password: "",
-    role: "",
-  });
-  const router = useNavigate();
+  const [cartProducts, setCartProducts] = useState([]);
+  const { state } = useContext(AuthContext);
 
-  // console.log(userCart, "- userCart");
   console.log(state, "state here");
 
   useEffect(() => {
@@ -26,7 +19,7 @@ const Cart = () => {
           userId: state?.user?._id,
         });
         if (response.data.success) {
-          setUserCart(response.data.userCart);
+          setCartProducts(response.data.cartProducts);
         }
       } catch (error) {
         console.log(error, "error in cart");
@@ -37,29 +30,39 @@ const Cart = () => {
     }
   }, [state]);
 
-  console.log(userCart, "userCart here");
+  console.log(cartProducts, "cartProducts here");
 
-  function checkout(){
-    if (state?.user?._id) {
-      for (var i = 0; i < userCart.length; i++) {
-          userCart[i].cart=[];
-          break;
+  const checkOut = async () => {
+    const token = JSON.parse(localStorage.getItem("token"));
+    console.log(token,"token here")
+      if (token) {
+        console.log(token,"token here")
+      try {
+        const response = await api.post("/checkOut", {token});
+        // console.log(response.data.success,"response here");
+        if (response.data.success) {
+          toast.success(response.data.message);
+          setCartProducts([]);
+          setFinalPrice([])
+        } else {
+          toast.error(response.data.message);
+        }
+      } catch (error) {
+        toast.error(error.message);
       }
     }
-    setFinalPrice([]);  
-    setUserCart([]);
-   toast.success("Your products will be delivered soon. Thankyou for shopping!")
-  }
+  };
+  // }
 
   useEffect(() => {
-    if (userCart?.length) {
-        var totalprice = 0;
-        for (var i = 0; i < userCart.length; i++) {
-            totalprice += userCart[i].price;
-        }
-        setFinalPrice(totalprice)
+    if (cartProducts.length) {
+      var totalprice = 0;
+      for (var i = 0; i < cartProducts.length; i++) {
+        totalprice += cartProducts[i].price;
+      }
+      setFinalPrice(totalprice);
     }
-}, [userCart])
+  }, [cartProducts]);
   
   return (
     <div id='cascreen'>
@@ -71,8 +74,8 @@ const Cart = () => {
           </div>
           
           <div>
-          {userCart &&
-          userCart.map((pro) => (
+          {cartProducts &&
+          cartProducts.map((pro) => (
           <div>
             <div>
               <div>
@@ -110,7 +113,7 @@ const Cart = () => {
                 <p>Clicking on Continue will not deduct any money</p>
             </div>
             <div>
-                <button onClick={checkout}>Continue</button>
+                <button onClick={checkOut}>Continue</button>
             </div>
             <div>
                 <img src="https://images.meesho.com/images/marketing/1588578650850.png"/>
