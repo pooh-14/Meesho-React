@@ -7,17 +7,21 @@
   
   #allscreen {
     width: 100%;
-    /* border: 2px solid red; */
+    
+    border: 2px solid red;
   }
   
   #allbody {
+    width: 90%;
+    margin: auto;
     display: flex;
+    justify-content: space-between;
+    border: 2px solid blue;
   }
   
   #allleft {
-    margin-left: 100px;
     margin-top: 20px;
-    width: 20%;
+    width: 25%;
     /* border: 1px solid blue; */
   }
   
@@ -90,49 +94,50 @@
   }
   
   #allright {
-    width: 63%;
+    width: 73%;
     /* border: 1px solid red; */
-    margin-left: 20px;
+    /* margin-left: 20px; */
     margin-top: 100px;
     display: flex;
     flex-wrap: wrap;
   }
   
   #allright > div {
-    width: 23%;
+    width: 22%;
     height: 380px;
     border: 1px solid rgb(196, 190, 190);
     border-radius: 7px;
-    margin: 8px;
+    margin: 13px;
     line-height: 23px;
   }
   
   #allright > div > div:nth-child(1) {
     width: 100%;
-    height: 230px;
+    height: 275px;
   }
   
   #allright > div > div:nth-child(1) > img {
-    width: 90%;
+    width: 100%;
     height: 100%;
-   margin-left: 11px;
+   /* margin-left: 11px; */
   }
 
   #allright >div:nth-child(4) > div:nth-child(1) > img {
-    width: 90%;
+    width: 100%;
     height: 100%;
-   margin-left: 11px;
+   /* margin-left: 11px; */
   }
   
   #allright > div > p:nth-child(2) {
     font-size: 16px;
-    color: grey;
+    color: rgb(99, 99, 99);
     margin-left: 12px;
-    margin-top: 20px;
+    margin-top: 12px;
+    margin-bottom: 3px;
   }
   
   #allright > div > span:nth-child(3) {
-    font-size: 24px;
+    font-size: 18px;
     margin-left: 12px;
     color: #353543;
     font-weight: 600;
@@ -141,29 +146,31 @@
   #allright > div > span:nth-child(4) {
     font-size: 12px;
     color: grey;
+    margin-left: 4px;
   }
   
-  #allright > div > p:nth-child(5) {
+  /* #allright > div > p:nth-child(5) {
     font-size: 12px;
     color: grey;
     font-weight: 600;
     margin-left: 12px;
-  }
+  } */
   
   #allright > div > div:nth-child(6) {
     display: flex;
     margin-left: 12px;
-    margin-top:5px;
+    margin-top:3px;
   }
   
   #allright > div > div:nth-child(6) > span:nth-child(1) {
     display: flex;
     border: 1px solid #23bb75;
-    font-size: 14px;
-    padding: 0px 5px;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 0px 0 0 6px;
     border-radius: 20px;
     align-items: center;
-    background-color: #23bb75;
+    background-color: #1a8754;
     color: white;
   }
   

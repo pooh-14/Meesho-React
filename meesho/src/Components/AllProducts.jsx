@@ -190,17 +190,22 @@ const AllProducts = () => {
            </div>
          </div>
        </div>
+
        <div id="allright">
+
        {products.map((pro) => (  
          <div onClick={() => router(`/singleproduct/${pro._id}`)}
                 key={pro._id}>
+
            <div>
              <img src={pro.image} />
            </div>
+
            <p>{pro.name}</p>
            <span>Rs.{pro.price}</span>
            <span>onwards</span>
-           <p>Free Delivery</p>
+           <p></p>
+
            <div>
              <span>
                <p>3.4</p>
@@ -208,6 +213,7 @@ const AllProducts = () => {
              </span>
              <p>27 Reviews</p>
            </div>
+
          </div>
         ))}
        </div>

@@ -289,7 +289,8 @@ const Navbar = () => {
             <div id="napic">
               <img
                 onClick={() => router("/")}
-                src="https://cdni.autocarindia.com/utils/imageresizer.ashx?n=http://img.haymarketsac.in/campaignindia/campaign-india/content/20230608033843_meesholead.png&w=800&h=520&q=70&c=1"
+                src="https://uploads-ssl.webflow.com/62bc395da3c33ed00dcc1317/634bd1950007a1468123fe05_logo%20meesho%20-p-500.png"
+                alt="Meesho Logo"
               />
             </div>
             <div id="nasearch">
