@@ -25,7 +25,9 @@ const Register = () => {
       if (userData.name && userData.email && userData.password && userData.confirmPassword && userData.role) {
           if (userData.password === userData.confirmPassword) {
               const response = await api.post("/register", { userData });
+              
               if (response.data.success) {
+                console.log(userData, "userData")
                   setUserData({ name: "", email: "", password: "", confirmPassword: "", role: "Buyer" })
                   router('/login')
                   toast.success(response.data.message)
@@ -40,7 +42,7 @@ const Register = () => {
           toast.error("All fields are mandtory.")
       }
   }
-  // console.log(userData, "userData")
+  console.log(userData, "userData")
 
   useEffect(() => {
       if (state?.user?.name) {
@@ -62,7 +64,7 @@ const Register = () => {
           onSubmit={handleSubmit}
           >
             <label>Select Role :</label>
-                   <select onChange={selectRole}>
+                   <select value={userData.role} onChange={selectRole}>
                    <option value="Buyer">Buyer</option>
                    <option value="Seller">Seller</option>
                    </select>

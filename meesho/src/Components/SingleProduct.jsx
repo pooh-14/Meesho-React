@@ -6,13 +6,12 @@ import { AuthContext } from '../Context/AuthContext';
 import api from "./ApiConfig";
 
 const SingleProduct = () => {
-
-  
-  const [userData, setUserData] = useState({});
   const [allowUpdate, setAllowUpdate] = useState(false);
   const { id } = useParams();
   const { state } = useContext(AuthContext);
   const [singleProductData, setSingleProductData] = useState({});
+  const [productData, setProductData] = useState({name: "", price: "", image: "", category: ""});
+  const router = useNavigate();
 
   useEffect(() => {
     if (id) {
@@ -23,31 +22,34 @@ const SingleProduct = () => {
                     setSingleProductData(response.data.product)
                 }
             } catch (error) {
-              console.log(error);
+
             }
         }
         getSingleProductData()
     }
 }, [id])
 
-  console.log(singleProductData, "singleProductData");
+  // console.log(singleProductData, "singleProductData");
 
   async function addToCart(productId) {
-    try {
-      const token = JSON.parse(localStorage.getItem("token"));
-      const response = await api.post("/add-cart", { productId},{token});
-  
-      if (response.data.success) {
-        toast.success("Product added successfully to cart!!");
-      } else {
-        toast.error("Failed to add product to cart. Please try again.");
+    
+      try {
+          const response = await api.post("/add-to-cart", {
+            productId,
+            userId: state?.user?._id,
+          });
+          
+          if (response.data.success) {
+            toast.success("Product added successfully to cart!!");
+          }
+        
+      } catch (error) {
+        console.log(error);
+        toast.error("Login First")
+        router("/login")
       }
-    } catch (error) {
-      console.log(error);
-      toast.error("Internal server error")
-    }
+    
   }
-
 
 
 
@@ -62,32 +64,55 @@ const SingleProduct = () => {
   }
 
   function handleChange(e) {
-    setSingleProductData({ ...singleProductData, [e.target.name]: e.target.value });
+    setProductData({ ...productData, [e.target.name]: e.target.value });
+
+    console.log(e.target.value ,"e.target.name")
   }
-  function selectRole(e) {
-    setSingleProductData({ ...singleProductData, ["category"]: e.target.value });
-  }
-  function handleSubmit(e) {
+
+  async function handleSubmit (e,productId) {
     e.preventDefault();
-    const allProduct = JSON.parse(localStorage.getItem("Products"));
-    for (let i = 0; i < allProduct.length; i++) {
-      if (allProduct[i].id === id) {
-        allProduct[i].image = singleProductData.image;
-        allProduct[i].name = singleProductData.name;
-        allProduct[i].price = singleProductData.price;
-        allProduct[i].category = singleProductData.category;
-        singleProductData.image = singleProductData.image;
-        singleProductData.name = singleProductData.name;
-        singleProductData.price = singleProductData.price;
-        singleProductData.category = singleProductData.category;
+// async function uptoDate (productId){
+  try {
+    const token = JSON.parse(localStorage.getItem("token"));
+        const response = await api.post("/update-your-product", { productData}, {token, productId });
+        if (response.data.success) {
+          setProductData({name: "", price: "", image: "", category: ""  })
+            toast.success(response.data.message)
+        } else {
+            toast.error(response.data.message)
+        }
 
-        localStorage.setItem("Products", JSON.stringify(allProduct));
-        setSingleProductData({ name: "", price: "", image: "", category: "Other" });
-        toast.success("Product Updated!");
+ } catch (error) {
+  console.log(error)
+ }
+}
+
+const deleteProduct = async (productId) => {
+  try {
+    const token = JSON.parse(localStorage.getItem("token"));
+    console.log(token, "token here");
+    const response = await api.post(
+      "delete-your-product",
+      {
+        productId,
+        token,
       }
+    );
+    console.log(response,"data here");
+    if (response.data.success) {
+      toast.success("item removed succesfully");
+      setSingleProductData(response.data.user);
+    } else {
+      toast.error( response.data.message);
     }
+  } catch (error) {
+    console.log(error);
   }
-
+};
+   
+  
+  
+console.log(state);
 
   return (
     <div>
@@ -119,15 +144,12 @@ const SingleProduct = () => {
                 <br />
                 <label>Product Category :</label>
                 <br />
-                <select
-                  onChange={selectRole}
-                >
-                  <option value="Other">Other</option>
-                  <option value="Mens">Mens</option>
-                  <option value="Womens">Womens</option>
-                  <option value="Kids">Kids</option>
-                  <option value="Electronics">Electronics</option>
-                </select>
+                <input
+                  type="text"
+                  name="category"
+                  value={singleProductData.category}
+                  onChange={handleChange}
+                />
                 <br />
                 <label>Product Image :</label>
                 <br />
@@ -163,16 +185,19 @@ const SingleProduct = () => {
        />
      </div>  
 
-     {userData?.role !== "Buyer" ?
-     <div>
-       <button onClick={uptoDate}>Update Product</button>
-       <button>Delete</button>
-     </div>
-        :
-     <div>
-       <button onClick={addToCart}>Add to Cart</button>
-      <button>Buy Now</button>
-     </div>}
+     {state?.user?.role === "Seller" ? (
+  <div>
+    <button onClick={uptoDate}>Update Product</button>
+    <button onClick={deleteProduct}>Delete</button>
+  </div>
+) : (
+  <div>
+    <button onClick={() => addToCart(singleProductData._id)}>Add to Cart</button>
+    <button>Buy Now</button>
+  </div>
+)}
+
+
 
 
      <div>

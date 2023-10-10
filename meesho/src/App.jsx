@@ -10,6 +10,7 @@ import SingleProduct from './Components/SingleProduct';
 import Cart from './Components/Cart';
 import { AuthContext } from './Context/AuthContext';
 import { useContext } from 'react';
+import YourProducts from './Components/YourProducts';
 
 function App() {
   const { state } = useContext(AuthContext);
@@ -23,6 +24,7 @@ function App() {
       <Route exact path='/register' element={<Register/>}/>
       <Route exact path='/login' element={<Login/>}/>
       <Route exact path='/allproducts' element={<AllProducts/>}/>
+      <Route exact path='/yourproducts' element={<YourProducts/>}/>
       <Route exact path='/singleproduct/:id' element={<SingleProduct/>}/>
       <Route exact path='/cart' element={<Cart/>}/>
       </Routes>

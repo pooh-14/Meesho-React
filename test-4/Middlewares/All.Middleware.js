@@ -17,7 +17,7 @@ export const checkSeller = async (req, res, next) => {
         const user = await UserModal.findById(userId);
 
         if (!user || user?.role != "Seller") {
-            return res.status(404).json({ message: "User not valid to add product from middleware.", success: false })
+            return res.status(404).json({ message: "User not a Seller.", success: false })
         }
 
         next();

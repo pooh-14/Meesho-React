@@ -36,7 +36,7 @@ const AddProduct = () => {
         });
         if (response.data.success) {
           setProductData({ name: "", price: "", image: "", category: "" });
-          router("/yourproduct");
+          router("/yourproducts");
           toast.success(response.data.message);
         }
       } catch (error) {

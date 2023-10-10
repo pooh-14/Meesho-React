@@ -7,8 +7,8 @@ import { customAlphabet } from "nanoid";
 export const Register = async (req, res) => {
   try {
     const { userData } = req.body;
-    const { name, email, password, role, number } = userData;
-    if (!name || !email || !password || !role || !number)
+    const { name, email, password, role } =userData;
+    if (!name || !email || !password || !role)
       return res.json({
         success: false,
         message: "All Feilds are Mandatory!",
@@ -25,34 +25,36 @@ export const Register = async (req, res) => {
     const hashPassW = await bcrypt.hash(password, 10);
 
     const user = new UserModal({
-      name,
-      email,
+      name:name,
+      email:email,
       password: hashPassW,
-      role,
-      number,
+      role:role,
     });
 
     await user.save();
 
     return res.json({
       success: true,
-      message: "User Registerd Successfully!",
+      message: "User Registered Successfully!",
+      user:user
     });
   } catch (error) {
-    return res.json({ success: "false", message: false });
+    return res.json({ success: false, message: error.message});
   }
 };
        
 export const Login = async (req, res) => {
   try {
+    // const { userData } = req.body;
     const { email, password } = req.body.userData;
+    console.log(email, password);
     if (!email || !password)
       return res.json({
         success: false,
         message: "All feilds are mandatory!",
       });
 
-    const user = await UserModal.findOne({ email });
+    const user = await UserModal.findOne({ email:email });
     if (!user) return res.json({ success: false, message: "User not found!" });
 
     if (user.isBlocked) {
@@ -73,11 +75,9 @@ export const Login = async (req, res) => {
       };
 
       // console.log(token, "token here");
-      const expiryTime = user?.role == "Seller" ? "4h" : "1h";
+      // const expiryTime = user?.role == "Seller" ? "4h" : "1h";
       // console.log(expiryTime, "expiryTime")
-      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-        expiresIn: expiryTime,
-      });
+      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
 
       return res.json({
         success: true,
@@ -88,7 +88,7 @@ export const Login = async (req, res) => {
     }
     return res.json({ success: false, message: "Password is Wrong!" });
   } catch (error) {
-    return res.json({ success: false, message: false });
+    return res.json({ success: false, message: error.message });
   }
 };
 

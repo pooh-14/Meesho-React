@@ -9,17 +9,6 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-  number:{
-    type: Number,
-    required: true,
-  },
-  isNumberVerified:{
-    type:Boolean,
-    default:false
-  },
-  otpForNumberVerification:{
-    type:Number,
-  },
   password: {
     type: String,
     required: true,
@@ -31,13 +20,6 @@ const userSchema = new Schema({
   },
   cart: {
     type: [String],
-  },
-  wishlist: {
-    type: [String],
-  },
-  isBlocked: {
-    type: Boolean,
-    default: false,
   },
 });
 

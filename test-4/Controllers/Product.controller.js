@@ -77,7 +77,8 @@ export const getYourProducts = async (req, res) => {
 
 export const updateYourProduct = async (req, res) => {
     try {
-        const { productId, name, image, price, category, token } = req.body;
+      const { name, image, price, category } = req.body.productData;
+      const { productId,token} = req.body;
         if (!token) return res.status(404).json({ success: false, message: "Token is mandtory.." })
 
         const decodedData = jwt.verify(token, process.env.JWT_SECRET)
@@ -104,24 +105,43 @@ export const updateYourProduct = async (req, res) => {
 
 export const deleteYourProduct = async (req, res) => {
   try {
-      const { productId, token } = req.body;
+    const { productId, token } = req.body;
+    // console.log(productId, token);
+    if (!productId || !token)
+      return res.status(404).json({
+        success: false,
+        message: "Product id and token is mandtory..",
+      });
 
-      if (!productId) return res.status(404).json({ success: false, message: "Product id is mandtory.." })
-
-      const decodedData = jwt.verify(token, process.env.JWT_SECRET);
-      const userId = decodedData.userId;
-
-      const isDeleted = await ProductModal.findOneAndDelete({ _id: productId, userId: userId })
-      if (isDeleted) {
-          return res.status(200).json({ success: true, message: "Product Deleted Successfully." })
+      const decodedData = jwt.verify(token, process.env.JWT_SECRET)
+      if (!decodedData) {
+          return res.status(404).json({ success: false, message: "Token not valid." })
       }
+      const userId = decodedData.userId;
+    // console.log(decodedData);
 
-      throw new Error("Mongodb error")
+    const isDeleted = await ProductModal.findOneAndDelete({
+      _id: productId,
+    });
+    if (isDeleted) {
+      const products = await ProductModal.find({});
+      if (products) {
+        console.log(products);
+      }
+      return res
+        .status(200)
+        .json({
+          success: true,
+          message: "Product Deleted Successfully.",
+          products: products,
+        });
+    }
 
+    throw new Error("Mongodb error");
   } catch (error) {
-      return res.status(500).json({ success: false, error: error.message })
+    return res.status(500).json({ success: false, error: error.message });
   }
-}
+};
 
 
 export const addRating = async(req,res)=>{

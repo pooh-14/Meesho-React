@@ -22,7 +22,7 @@ import {
   getYourProducts,
   updateYourProduct,
 } from "./Controllers/Product.controller.js";
-import { addCart, getCartProducts } from "./Controllers/Buyers.controller.js";
+import { addCart, getCartProducts, removeCartItem } from "./Controllers/Buyers.controller.js";
 import {
   blockProduct,
   blockUser,
@@ -79,7 +79,7 @@ app.post("/verify-otp", verifyOtp)
 
 app.post("/get-your-products", checkSeller, getYourProducts);
 
-app.patch("/update-your-product", checkSeller, updateYourProduct);
+app.post("/update-your-product", checkSeller, updateYourProduct);
 
 app.post("/add-cart", addCart);
 
@@ -89,13 +89,15 @@ app.post("/get-single-product-data", getSingleProductData);
 
 app.post("/add-to-cart", addToCart);
 
+app.post("/remove-cart-items", removeCartItem);
+
 app.post("/all-cart-products", allCartProducts);
 
 app.get("/get-cart-products", getCartProducts);
 
 app.post("/checkout", checkOut);
 
-app.delete("/delete-your-product", checkSeller, deleteYourProduct);
+app.post("/delete-your-product",checkSeller, deleteYourProduct);
 
 app.patch("/block-user", isAdmin, blockUser);
 

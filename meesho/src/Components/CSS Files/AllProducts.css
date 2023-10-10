@@ -7,8 +7,7 @@
   
   #allscreen {
     width: 100%;
-    
-    border: 2px solid red;
+    /* border: 2px solid red; */
   }
   
   #allbody {
@@ -16,7 +15,7 @@
     margin: auto;
     display: flex;
     justify-content: space-between;
-    border: 2px solid blue;
+    /* border: 2px solid blue; */
   }
   
   #allleft {

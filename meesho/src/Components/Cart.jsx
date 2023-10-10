@@ -28,7 +28,7 @@ const Cart = () => {
     if (state?.user?._id) {
       getCartProduct();
     }
-  }, [state]);
+  }, [state, cartProducts]);
 
   console.log(cartProducts, "cartProducts here");
 
@@ -63,6 +63,29 @@ const Cart = () => {
       setFinalPrice(totalprice);
     }
   }, [cartProducts]);
+
+  const removecartItem = async (productId) => {
+    try {
+      const token = JSON.parse(localStorage.getItem("token"));
+      // console.log(token, "token here");
+      const response = await api.post(
+        "remove-cart-items",
+        {
+          productId,
+          token,
+        }
+      );
+      console.log(response,"data here");
+      if (response.data.success) {
+        toast.success("item removed succesfully");
+        setCartProducts(response.data.user);
+      } else {
+        toast.error( response.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   
   return (
     <div id='cascreen'>
@@ -74,8 +97,8 @@ const Cart = () => {
           </div>
           
           <div>
-          {cartProducts &&
-          cartProducts.map((pro) => (
+          {cartProducts.length >0  &&
+          cartProducts?.map((pro) => (
           <div>
             <div>
               <div>
@@ -85,7 +108,7 @@ const Cart = () => {
                 <p style={{fontWeight: "600"}}>{pro.name}</p>
                 <p>Size: L   Qty: 1</p>
                 <p>₹{pro.price}</p>
-                <p style={{fontWeight: "600", marginTop: "10px"}}>X REMOVE</p>
+                <p onClick={()=>removecartItem(pro._id)} style={{fontWeight: "600", marginTop: "10px"}}>X REMOVE</p>
               </div>
               <div>
                 <p>EDIT</p>

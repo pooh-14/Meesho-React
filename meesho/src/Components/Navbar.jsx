@@ -338,15 +338,16 @@ const Navbar = () => {
         </div>
       </div>
       <div id="navdown">
-        <p onClick={() => router("/allproducts")}>Women Ethnic</p>
-        <p>Women Western</p>
-        <p>Men</p>
+        <p onClick={() => router("/allproducts")}>All Products</p>
+        <p>Women </p>
+        <p >Men</p>
         <p>Kids</p>
         <p>Home & Kitchen</p>
         <p>Beauty & Health</p>
         <p>Jewellery & Accesories</p>
         <p>Bags & Footwear</p>
         <p>Electronics</p>
+        {userData?.role ==="Seller" ? <p onClick={() => router("/yourproducts")}>Your Products</p> : <p>Your Orders</p>}
       </div>
     </div>
   );

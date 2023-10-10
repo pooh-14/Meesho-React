@@ -11,7 +11,7 @@
   }
   #logbody {
     width: 30%;
-    height: 750px;
+    height: 770px;
     /* border: 2px solid blue; */
     margin: auto;
     margin-top: 50px;
@@ -27,7 +27,7 @@
     margin-left: 45px;
     font-size: 20px;
     font-weight: 700;
-    margin-top: 40px;
+    margin-top: 20px;
     color: #353543;
   }
 
@@ -37,25 +37,26 @@
   #logform>form{
     width: 75%;
     margin: auto;
-    margin-top: 30px;
+    margin-top: 20px;
 }
 
 #logform>form>label{
     color: #9d9e9f;
+    font-size: 16px;
 }
 
 #logform>form>input{
     width: 100%;
-    height: 27px;
+    height: 25px;
     border: none;
     outline: none;
     border-bottom:1px solid #b0b1b2;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 }
 
 #logform>form>select{
     width: 100%;
-    height: 27px;
+    height: 25px;
     border: none;
     outline: none;
     border-bottom:1px solid #b0b1b2;
@@ -93,7 +94,7 @@
   }
   
   #logbody > div:nth-child(5){
-      margin-top: 70px;
+      margin-top: 55px;
       font-size: 12px;
       font-weight: 600;
       color: gray;

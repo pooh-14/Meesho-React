@@ -1,0 +1,125 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, "Helvetica Neue", sans-serif, "Mier Book";
+    text-decoration: none;
+  }
+  
+  #yourscreen {
+    width: 100%;
+    /* border: 2px solid red; */
+    text-align: center;
+    padding: 20px;
+    font-size: 30px;
+    font-weight: 700;
+    color: #353543;
+  }
+  
+  #yourbody {
+    width: 90%;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    /* border: 2px solid blue; */
+  }
+  
+  
+  
+  #yourright {
+    width:100%;
+    /* border: 1px solid red; */
+    /* margin-left: 20px; */
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+  }
+  
+  #yourright > div {
+    width: 16%;
+    height: 380px;
+    border: 1px solid rgb(196, 190, 190);
+    border-radius: 7px;
+    margin: 13px;
+    line-height: 23px;
+    margin-bottom: 30px;
+   
+  }
+  
+  #yourright > div > div:nth-child(1) {
+    width: 100%;
+    height: 275px;
+  }
+  
+  #yourright > div > div:nth-child(1) > img {
+    width: 100%;
+    height: 100%;
+   /* margin-left: 11px; */
+  }
+
+  #yourright >div:nth-child(4) > div:nth-child(1) > img {
+    width: 100%;
+    height: 100%;
+   /* margin-left: 11px; */
+  }
+  
+  #yourright > div > p:nth-child(2) {
+    font-size: 16px;
+    color: rgb(99, 99, 99);
+    margin-left: 12px;
+    margin-top: 12px;
+    margin-bottom: 3px;
+  }
+  
+  #yourright > div > span:nth-child(3) {
+    font-size: 18px;
+    margin-left: 12px;
+    color: #353543;
+    font-weight: 600;
+  }
+  
+  #yourright > div > span:nth-child(4) {
+    font-size: 12px;
+    color: grey;
+    margin-left: 4px;
+  }
+  
+  /* #yourright > div > p:nth-child(5) {
+    font-size: 12px;
+    color: grey;
+    font-weight: 600;
+    margin-left: 12px;
+  } */
+  
+  #yourright > div > div:nth-child(6) {
+    display: flex;
+    margin-left: 12px;
+    margin-top:3px;
+  }
+  
+  #yourright > div > div:nth-child(6) > span:nth-child(1) {
+    display: flex;
+    border: 1px solid #23bb75;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 0px 0 0 6px;
+    border-radius: 20px;
+    align-items: center;
+    background-color: #1a8754;
+    color: white;
+  }
+  
+  #yourright > div > div:nth-child(6) > span:nth-child(1) > p {
+    margin-top: 2px;
+  }
+  
+  #yourright > div > div:nth-child(6) > span:nth-child(1) > i {
+    margin: 3px;
+  }
+  
+  #yourright > div > div:nth-child(6) > p {
+    font-size: 12px;
+    color: grey;
+    margin-left: 10px;
+  }
+  
