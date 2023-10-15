@@ -32,7 +32,7 @@ const SingleProduct = () => {
   // console.log(singleProductData, "singleProductData");
 
   async function addToCart(productId) {
-    
+    console.log(productId)
       try {
           const response = await api.post("/add-to-cart", {
             productId,
@@ -45,8 +45,6 @@ const SingleProduct = () => {
         
       } catch (error) {
         console.log(error);
-        toast.error("Login First")
-        router("/login")
       }
     
   }
