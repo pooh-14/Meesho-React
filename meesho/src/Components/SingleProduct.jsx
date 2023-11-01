@@ -31,6 +31,8 @@ const SingleProduct = () => {
 
   // console.log(singleProductData, "singleProductData");
 
+// ----------------------------**addCart**------------------------------------------
+
   async function addToCart(productId) {
     console.log(productId)
       try {
@@ -49,9 +51,13 @@ const SingleProduct = () => {
     
   }
 
+  
+// ----------------------------**addCart**------------------------------------------
 
 
 
+
+// ----------------------------**UpdateProduct**------------------------------------------
 
   function uptoDate() {
     setAllowUpdate(true);
@@ -85,6 +91,28 @@ const SingleProduct = () => {
  }
 }
 
+// ----------------------------**UpdateProduct**------------------------------------------
+
+
+// ----------------------------**deleteProduct**------------------------------------------
+
+// async function deleteProduct (productId) {
+//   try{
+//     const token = JSON.parse(localStorage.getItem('token'));
+//     const res = await api.delete('/remove-a-product', { data:{id: productId}}, {headers: {'x-access-token': token}})
+//     if(res.status ===200){
+//       // history.push('/seller/dashboard')
+//       }else{
+//         throw new Error ('Error in deleting the Product');
+//         }
+//         }catch(err){
+//           console.log(err);
+//           }
+          
+//         }
+        
+
+
 const deleteProduct = async (productId) => {
   try {
     const token = JSON.parse(localStorage.getItem("token"));
@@ -107,10 +135,12 @@ const deleteProduct = async (productId) => {
     console.log(error);
   }
 };
-   
-  
-  
+
 console.log(state);
+   
+  // ----------------------------**deleteProduct**------------------------------------------
+  
+
 
   return (
     <div>
@@ -185,8 +215,8 @@ console.log(state);
 
      {state?.user?.role === "Seller" ? (
   <div>
-    <button onClick={uptoDate}>Update Product</button>
-    <button onClick={deleteProduct}>Delete</button>
+    <button onClick={()=>uptoDate(singleProductData._id)}>Update Product</button>
+    <button onClick={()=>deleteProduct(singleProductData._id)}>Delete</button>
   </div>
 ) : (
   <div>
