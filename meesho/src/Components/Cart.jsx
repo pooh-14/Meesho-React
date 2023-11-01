@@ -32,6 +32,8 @@ const Cart = () => {
 
   console.log(cartProducts, "cartProducts here");
 
+  // -------------------------**Checkout**------------------------------------------
+
   const checkOut = async () => {
     const token = JSON.parse(localStorage.getItem("token"));
     console.log(token,"token here")
@@ -52,7 +54,11 @@ const Cart = () => {
       }
     }
   };
-  // }
+  
+  // -------------------------**Checkout**------------------------------------------
+
+  
+  // -------------------------**Total Amt Display**------------------------------------------
 
   useEffect(() => {
     if (cartProducts.length) {
@@ -63,6 +69,12 @@ const Cart = () => {
       setFinalPrice(totalprice);
     }
   }, [cartProducts]);
+
+  
+  // -------------------------**Total Amt Display**------------------------------------------
+
+  
+  // -------------------------**Remove products**------------------------------------------
 
   const removecartItem = async (productId) => {
     try {
@@ -86,6 +98,10 @@ const Cart = () => {
       console.log(error);
     }
   };
+
+  
+  // -------------------------**Remove products**------------------------------------------
+  
   
   return (
     <div id='cascreen'>
