@@ -68,9 +68,9 @@ const SingleProduct = () => {
   }
 
   function handleChange(e) {
-    setProductData({ ...productData, [e.target.name]: e.target.value });
+    const { value, name } = e.target;
+    setProductData({ ...productData, [name]: value });
 
-    console.log(e.target.value ,"e.target.name")
   }
 
   async function handleSubmit (e,productId) {
@@ -78,10 +78,11 @@ const SingleProduct = () => {
 // async function uptoDate (productId){
   try {
     const token = JSON.parse(localStorage.getItem("token"));
-        const response = await api.post("/update-your-product", { productData}, {token, productId });
+        const response = await api.post("/update-your-product", {token, productId, productData });
         if (response.data.success) {
           setProductData({name: "", price: "", image: "", category: ""  })
             toast.success(response.data.message)
+            
         } else {
             toast.error(response.data.message)
         }
@@ -95,21 +96,6 @@ const SingleProduct = () => {
 
 
 // ----------------------------**deleteProduct**------------------------------------------
-
-// async function deleteProduct (productId) {
-//   try{
-//     const token = JSON.parse(localStorage.getItem('token'));
-//     const res = await api.delete('/remove-a-product', { data:{id: productId}}, {headers: {'x-access-token': token}})
-//     if(res.status ===200){
-//       // history.push('/seller/dashboard')
-//       }else{
-//         throw new Error ('Error in deleting the Product');
-//         }
-//         }catch(err){
-//           console.log(err);
-//           }
-          
-//         }
         
 
 
@@ -156,7 +142,7 @@ console.log(state);
                 <input
                   type="text"
                   name="name"
-                  value={singleProductData.name}
+                  value={productData.name}
                   onChange={handleChange}
                 />
                 <br />
@@ -166,7 +152,7 @@ console.log(state);
                 <input
                   type="number"
                   name="price"
-                  value={singleProductData.price}
+                  value={productData.price}
                   onChange={handleChange}
                 />
                 <br />
@@ -175,7 +161,7 @@ console.log(state);
                 <input
                   type="text"
                   name="category"
-                  value={singleProductData.category}
+                  value={productData.category}
                   onChange={handleChange}
                 />
                 <br />
@@ -184,7 +170,7 @@ console.log(state);
                 <input
                   type="text"
                   name="image"
-                  value={singleProductData.image}
+                  value={productData.image}
                   onChange={handleChange}
                 />
                 <br />
@@ -215,7 +201,7 @@ console.log(state);
 
      {state?.user?.role === "Seller" ? (
   <div>
-    <button onClick={()=>uptoDate(singleProductData._id)}>Update Product</button>
+    <button onClick={()=>uptoDate(productData._id)}>Update Product</button>
     <button onClick={()=>deleteProduct(singleProductData._id)}>Delete</button>
   </div>
 ) : (

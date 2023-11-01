@@ -77,7 +77,7 @@ export const getYourProducts = async (req, res) => {
 
 export const updateYourProduct = async (req, res) => {
     try {
-      const { name, image, price, category } = req.body.productData;
+      const { name, image, price, category } = req.body;
       const { productId,token} = req.body;
         if (!token) return res.status(404).json({ success: false, message: "Token is mandtory.." })
 
